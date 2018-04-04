@@ -1,0 +1,29 @@
+{% extends "household/master.html" %}
+
+{% block 'title' %}
+Showing Tasks
+{% endblock 'title' %}
+
+{% block 'content' %}
+
+<div class="ui container">
+    {% for task in tasks %}
+        <div class="ui segment">
+            <h3>
+                {{ task.name }}
+            </h3>
+            <p>
+                Start Date : {{ task.start_date }}
+            </p>
+
+            {% if task.is_recurring and task.recurring_pattern.get.recurring_type == 'daily' %}
+                Daily Recurring Task
+            {% endif %}
+            <p>
+
+            </p>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock 'content' %}

@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'household.apps.HouseholdConfig',
+    'tasks.apps.TasksConfig',
 ]
 
 MIDDLEWARE = [
