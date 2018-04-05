@@ -56,7 +56,15 @@ def addNewTask(request):
         return render(request, "tasks/add.html", {'form' : form})
 
     if request.method == 'POST':
-        task = TaskForm(request.POST)
+        form = TaskForm(request.POST)
 
-        if task.is_valid():
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.owner = request.user
+            task.start_date = timezone.now()
             task.save()
+            rp = RecurringPattern(recurring_type=request.POST['recurring_type'],task=task)
+            rp.save()
+
+            return redirect('tasks:index')
+    return redirect('tasks:index')

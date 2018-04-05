@@ -35,7 +35,7 @@ class RecurringPattern(models.Model):
     month_of_year = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.recurring_type
+        return self.task.name + ":" + self.recurring_type
 
 class TaskException(models.Model):
     task = models.ForeignKey(Task, related_name='exception_instance', on_delete=models.CASCADE)

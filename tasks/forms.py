@@ -7,10 +7,7 @@ RECURRING_TYPES=(
 )
 
 class TaskForm(forms.ModelForm):
-    
-
     recurring_type = forms.ChoiceField(choices=RECURRING_TYPES, required=True)
-
     class Meta:
         model=Task
         fields = '__all__'
