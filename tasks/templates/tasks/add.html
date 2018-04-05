@@ -1,0 +1,21 @@
+{% extends "household/master.html" %}
+
+{% block 'title' %}
+Add New Task
+{% endblock 'title' %}
+
+{% block 'content' %}
+<div class="ui container" style="margin-top: 1.52em;">
+    <div class="ui segment">
+        <h3>Add New Task</h3>
+        <hr>
+        <form class="ui form" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="ui green button">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock 'content' %}

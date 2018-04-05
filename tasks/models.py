@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Task(models.Model):
@@ -24,7 +25,7 @@ class Task(models.Model):
         return self.name
 
 class RecurringPattern(models.Model):
-    task = models.ForeignKey(Task, related_name='recurring_pattern', on_delete=models.CASCADE)
+    task = models.OneToOneField(Task, related_name='recurring_pattern',on_delete=models.CASCADE)
     recurring_type = models.CharField(max_length=255, blank=True, null=True)
     separation_count = models.PositiveIntegerField(blank=True, null=True)
     max_number_of_occurences = models.IntegerField(blank=True, null=True)
@@ -49,4 +50,9 @@ class TaskException(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
 
+class TaskRecord(models.Model):
+    task = models.ForeignKey(Task, related_name='records', on_delete=models.CASCADE)
+    data = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 

@@ -6,24 +6,71 @@ Showing Tasks
 
 {% block 'content' %}
 
-<div class="ui container">
-    {% for task in tasks %}
-        <div class="ui segment">
-            <h3>
-                {{ task.name }}
-            </h3>
-            <p>
-                Start Date : {{ task.start_date }}
-            </p>
+<div class="ui container" style="margin-top: 1.52em;">
+    <div class="ui segment">
+        <h3>
+            Hello {{ user.get_username }},
+        </h3>
+        
+        <p>
+            <strong>Find below your tasks: </strong>
+        </p>
+        
+        <a href="{% url 'tasks:add' %}" class="ui green button">
+            Add New Task
+        </a>
 
-            {% if task.is_recurring and task.recurring_pattern.get.recurring_type == 'daily' %}
-                Daily Recurring Task
-            {% endif %}
-            <p>
-
-            </p>
-        </div>
-    {% endfor %}
+        <table class="ui celled padded green table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {{ task.name }}
+                    </td>
+                    <td>
+                        {{ task.start_date }}
+                    </td>
+                    <td>
+                        {{ task.recurring_pattern.recurring_type }}
+                    </td>
+                    <td>
+                        {% if task.records.count <= 0 %}
+                            <a href="#" class="ui icon green button" title="Mark as Completed" id="triggerSubmit">
+                                <i class="icon check"></i>
+                            </a>
+                            <form action="{% url 'tasks:mark-task-complete' task.id %}" method="post" id="markTaskCompleteForm">
+                                {% csrf_token %}
+                            </form>
+                        {% else %}
+                            The task has active records for today.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock 'content' %}
+
+
+{% block 'scripts' %}
+<script>
+    $(document).ready(function() {
+        $('#triggerSubmit').on('click', function() {
+            $('#markTaskCompleteForm').submit();
+        })
+    })
+</script>
+{% endblock 'scripts' %}
