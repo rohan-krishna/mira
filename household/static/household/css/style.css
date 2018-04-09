@@ -1,0 +1,3 @@
+.completed td {
+    text-decoration: line-through !important;
+}

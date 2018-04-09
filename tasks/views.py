@@ -17,11 +17,25 @@ from .forms import TaskForm
 
 # Create your views here.
 def index(request):
-    tasks = Task.objects.filter(owner=request.user)
+    tasks = Task.objects.filter(
+        owner=request.user,
+        start_date = timezone.now())
+
+    dailyTasks = Task.objects.filter(
+        owner=request.user,
+        recurring_pattern__recurring_type="daily"
+    ).exclude(end_date__lt=timezone.now())
+    
+    future_tasks = Task.objects.filter(
+        owner=request.user,
+        start_date__gt = timezone.now())
+
     context = { 
         'tasks': tasks, 
         'daysInMonth' : range(calendar.monthrange(datetime.datetime.now().year, datetime.datetime.now().month)[1]), 
-        'calendar': HTMLCalendar(calendar.SUNDAY)
+        'calendar': HTMLCalendar(calendar.SUNDAY),
+        'future_tasks' : future_tasks,
+        'daily_tasks' : dailyTasks,
         }
     return render(request, "tasks/index.html", context)
 
@@ -37,13 +51,20 @@ def markTaskComplete(request, pk):
     if request.method == 'POST':
         t = Task.objects.get(pk=pk)
 
-        records = t.records.filter(created_at__day=timezone.now().day, created_at__month=timezone.now().month, created_at__year=timezone.now().year)
-        
-        if(records.count() <= 0): 
-            r = TaskRecord(task=t,data=t)
+        # let's search for today's records
+        record = t.records.filter(
+            created_at__day=timezone.now().day,
+            created_at__month=timezone.now().month,
+            created_at__year=timezone.now().year
+        ).first()
+
+        if not record:
+            r = TaskRecord(task=t,is_completed=True,data=t)
             r.save()
-        return redirect('tasks:index')
-    else:
+        else:
+            record.is_completed = True if not record.is_completed else False
+            record.save()
+        
         return redirect('tasks:index')
 
     return redirect('tasks:index')

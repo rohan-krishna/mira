@@ -31,29 +31,34 @@ Showing Tasks
                 </tr>
             </thead>
             <tbody>
-                {% for task in tasks %}
+
                 <tr>
-                    <td>{{ forloop.counter }}</td>
+                    <td colspan="5">
+                        <h3>Daily Tasks</h3>
+                    </td>
+                </tr>
+
+                {% for d_task in daily_tasks %}
+                <tr class="{% if d_task.records.first.is_completed %}completed{% endif %}">
                     <td>
-                        {{ task.name }}
+                        {{ forloop.counter }}
                     </td>
                     <td>
-                        {{ task.start_date }}
+                        {{ d_task.name }}
                     </td>
                     <td>
-                        {{ task.recurring_pattern.recurring_type }}
+                        {{ d_task.start_date }}
                     </td>
                     <td>
-                        {% if task.records.count <= 0 %}
-                            <a href="#" class="ui icon green button" title="Mark as Completed" id="triggerSubmit">
+                        {{ d_task.recurring_pattern.recurring_type }}
+                    </td>
+                    <td>
+                        <form action="{% url 'tasks:mark-task-complete' d_task.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="ui icon circular green button" title="Toggle Task Status">
                                 <i class="icon check"></i>
-                            </a>
-                            <form action="{% url 'tasks:mark-task-complete' task.id %}" method="post" id="markTaskCompleteForm">
-                                {% csrf_token %}
-                            </form>
-                        {% else %}
-                            The task has active records for today.
-                        {% endif %}
+                            </button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
@@ -68,8 +73,8 @@ Showing Tasks
 {% block 'scripts' %}
 <script>
     $(document).ready(function() {
-        $('#triggerSubmit').on('click', function() {
-            $('#markTaskCompleteForm').submit();
+        $('.triggerSubmit').on('click', function() {
+            $(this).children($('.markTaskCompleteForm').submit());
         })
     })
 </script>
