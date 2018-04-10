@@ -25,6 +25,12 @@ def index(request):
         owner=request.user,
         recurring_pattern__recurring_type="daily"
     ).exclude(end_date__lt=timezone.now())
+
+    onceTasks = Task.objects.filter(
+        owner=request.user,
+        recurring_pattern__recurring_type="once",
+        start_date=timezone.now()
+    )
     
     future_tasks = Task.objects.filter(
         owner=request.user,
@@ -36,6 +42,7 @@ def index(request):
         'calendar': HTMLCalendar(calendar.SUNDAY),
         'future_tasks' : future_tasks,
         'daily_tasks' : dailyTasks,
+        'once_tasks' : onceTasks
         }
     return render(request, "tasks/index.html", context)
 

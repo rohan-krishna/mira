@@ -62,6 +62,31 @@ Showing Tasks
                     </td>
                 </tr>
                 {% endfor %}
+
+                {% for o_task in once_tasks %}
+                <tr class="{% if o_task.records.first.is_completed %}completed{% endif %}">
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                        {{ o_task.name }}
+                    </td>
+                    <td>
+                        {{ o_task.start_date }}
+                    </td>
+                    <td>
+                        {{ o_task.recurring_pattern.recurring_type }}
+                    </td>
+                    <td>
+                        <form action="{% url 'tasks:mark-task-complete' o_task.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="ui icon circular green button" title="Toggle Task Status">
+                                <i class="icon check"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

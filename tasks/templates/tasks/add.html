@@ -12,6 +12,11 @@ Add New Task
         <form class="ui form" method="post">
             {% csrf_token %}
             {{ form.as_p }}
+
+            <div class="field" id="startDate">
+                <label for="start_date">Start Date: </label>
+                <input type="text" name="start_date" placeholder="Start Date">
+            </div>
             <button class="ui green button">
                 Submit
             </button>
@@ -19,3 +24,20 @@ Add New Task
     </div>
 </div>
 {% endblock 'content' %}
+
+{% block 'scripts' %}
+<script>
+    $(document).ready(function() {
+
+        $('#startDate').hide();
+
+        $('#id_recurring_type').on('change', function(e) {
+            if(e.target.value == "once") {
+                $('#startDate').show();
+            } else {
+                $('#startDate').hide();
+            }
+        })
+    })
+</script>
+{% endblock 'scripts' %}
