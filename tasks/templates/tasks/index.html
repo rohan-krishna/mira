@@ -89,6 +89,28 @@ Showing Tasks
                 {% endfor %}
             </tbody>
         </table>
+
+
+        <table class="ui celled padded black table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c_task in combined_tasks %}
+                <tr>
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                        {{ c_task.name }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 

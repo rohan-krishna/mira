@@ -1,6 +1,7 @@
 import calendar
 import datetime
 import json
+from itertools import chain
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
@@ -36,13 +37,16 @@ def index(request):
         owner=request.user,
         start_date__gt = timezone.now())
 
+    combined_tasks = list(chain(dailyTasks,onceTasks))
+
     context = { 
         'tasks': tasks, 
         'daysInMonth' : range(calendar.monthrange(datetime.datetime.now().year, datetime.datetime.now().month)[1]), 
         'calendar': HTMLCalendar(calendar.SUNDAY),
         'future_tasks' : future_tasks,
         'daily_tasks' : dailyTasks,
-        'once_tasks' : onceTasks
+        'once_tasks' : onceTasks,
+        'combined_tasks' : combined_tasks
         }
     return render(request, "tasks/index.html", context)
 
