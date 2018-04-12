@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'household.apps.HouseholdConfig',
     'tasks.apps.TasksConfig',
     'rest_framework',
+    'sweetify',
 ]
 
 MIDDLEWARE = [

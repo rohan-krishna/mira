@@ -15,7 +15,7 @@ Add New Task
 
             <div class="field" id="startDate">
                 <label for="start_date">Start Date: </label>
-                <input type="text" name="start_date" placeholder="Start Date">
+                <input type="text" name="start_date" placeholder="Start Date" data-toggle="datepicker">
             </div>
             <button class="ui green button">
                 Submit
@@ -28,16 +28,7 @@ Add New Task
 {% block 'scripts' %}
 <script>
     $(document).ready(function() {
-
-        $('#startDate').hide();
-
-        $('#id_recurring_type').on('change', function(e) {
-            if(e.target.value == "once") {
-                $('#startDate').show();
-            } else {
-                $('#startDate').hide();
-            }
-        })
+        $('[data-toggle="datepicker"]').datepicker();
     })
 </script>
 {% endblock 'scripts' %}

@@ -20,92 +20,81 @@ Showing Tasks
             Add New Task
         </a>
 
-        <table class="ui celled padded green table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Start Date</th>
-                    <th>Type</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                <tr>
-                    <td colspan="5">
-                        <h3>Daily Tasks</h3>
-                    </td>
-                </tr>
-
-                {% for d_task in daily_tasks %}
-                <tr class="{% if d_task.records.first.is_completed %}completed{% endif %}">
-                    <td>
-                        {{ forloop.counter }}
-                    </td>
-                    <td>
-                        {{ d_task.name }}
-                    </td>
-                    <td>
-                        {{ d_task.start_date }}
-                    </td>
-                    <td>
-                        {{ d_task.recurring_pattern.recurring_type }}
-                    </td>
-                    <td>
-                        <form action="{% url 'tasks:mark-task-complete' d_task.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="ui icon circular green button" title="Toggle Task Status">
-                                <i class="icon check"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-
-                {% for o_task in once_tasks %}
-                <tr class="{% if o_task.records.first.is_completed %}completed{% endif %}">
-                    <td>
-                        {{ forloop.counter }}
-                    </td>
-                    <td>
-                        {{ o_task.name }}
-                    </td>
-                    <td>
-                        {{ o_task.start_date }}
-                    </td>
-                    <td>
-                        {{ o_task.recurring_pattern.recurring_type }}
-                    </td>
-                    <td>
-                        <form action="{% url 'tasks:mark-task-complete' o_task.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="ui icon circular green button" title="Toggle Task Status">
-                                <i class="icon check"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
+        <h3>Today's Tasks</h3>
 
         <table class="ui celled padded black table">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Start Date</th>
+                    <th>Recurring Type</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for c_task in combined_tasks %}
-                <tr>
+                <tr class="{% if c_task.records.last.is_completed %}completed{% endif %}">
                     <td>
                         {{ forloop.counter }}
                     </td>
                     <td>
                         {{ c_task.name }}
+                    </td>
+                    <td>
+                        {{ c_task.start_date }}
+                    </td>
+                    <td>
+                        {{ c_task.recurring_pattern.recurring_type }}
+                    </td>
+                    <td>
+
+                        <div class="ui two column grid">
+                            <div class="column">
+                                <form action="{% url 'tasks:mark-task-complete' c_task.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="ui icon circular green button" title="Toggle Task Status">
+                                        <i class="icon check"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="column">
+                                <a href="{% url 'tasks:delete-task' c_task.id %}" class="ui icon circular red button" title="Delete Task">
+                                    <i class="icon trash"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Future Tasks</h3>
+        <table class="ui celled padded black table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>Recurring Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f_task in future_tasks %}
+                <tr class="{% if f_task.records.last.is_completed %}completed{% endif %}">
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+                    <td>
+                        {{ f_task.name }}
+                    </td>
+                    <td>
+                        {{ f_task.start_date }}
+                    </td>
+                    <td>
+                        {{ f_task.recurring_pattern.recurring_type }}
                     </td>
                 </tr>
                 {% endfor %}

@@ -1,7 +1,9 @@
 import calendar
 import datetime
 import json
+import sweetify
 from itertools import chain
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
@@ -24,7 +26,8 @@ def index(request):
 
     dailyTasks = Task.objects.filter(
         owner=request.user,
-        recurring_pattern__recurring_type="daily"
+        recurring_pattern__recurring_type="daily",
+        start_date__lte=timezone.now(),
     ).exclude(end_date__lt=timezone.now())
 
     onceTasks = Task.objects.filter(
@@ -76,6 +79,8 @@ def markTaskComplete(request, pk):
             record.is_completed = True if not record.is_completed else False
             record.save()
         
+        sweetify.success(request, 'Heads Up!.',text='The task\'s status has been toggled!', persistent="Noice!")
+        
         return redirect('tasks:index')
 
     return redirect('tasks:index')
@@ -93,10 +98,30 @@ def addNewTask(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.owner = request.user
-            task.start_date = timezone.now()
+            
+            if request.POST['start_date']:
+                task.start_date = datetime.datetime.strptime(request.POST['start_date'], "%m/%d/%Y").date()
+            else:
+                task.start_date = timezone.now()
+
             task.save()
             rp = RecurringPattern(recurring_type=request.POST['recurring_type'],task=task)
             rp.save()
+            
+            sweetify.success(request, 'The task has been successfully added.',persistent="Cool!")
 
             return redirect('tasks:index')
     return redirect('tasks:index')
+
+@transaction.atomic
+def deleteTask(request,pk):
+    t = Task.objects.get(pk=pk)
+    t.delete()
+
+    sweetify.info(request, 'The task has been successfully deleted.', persistent="All Righty!")
+    return redirect('tasks:index')
+
+def showTask(request, pk):
+    t = request.user.owner.get(pk=pk)
+    context = { 'task' : t }
+    return render(request, 'tasks/show.html', context)
