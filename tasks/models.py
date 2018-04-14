@@ -60,6 +60,13 @@ class TaskRecord(models.Model):
     def __str__(self):
         return self.task.name + " (" + str(self.is_completed) + ") " 
 
+    def is_for_today(self):
+
+        if self.created_at.date() == timezone.now().date() and self.is_completed:
+            return True
+        else:
+            return False
+
 class UserProfileInfo(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)

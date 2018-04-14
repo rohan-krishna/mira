@@ -34,7 +34,7 @@ Showing Tasks
             </thead>
             <tbody>
                 {% for c_task in combined_tasks %}
-                <tr class="{% if c_task.records.last.is_completed %}completed{% endif %}">
+                <tr class="{% if c_task.records.last.is_for_today %}completed{% endif %}">
                     <td>
                         {{ forloop.counter }}
                     </td>
