@@ -61,9 +61,7 @@ def markTaskComplete(request, pk):
 
         # let's search for today's records
         record = t.records.filter(
-            created_at__day=timezone.now().day,
-            created_at__month=timezone.now().month,
-            created_at__year=timezone.now().year
+            created_at__date=timezone.now()
         ).first()
 
         if not record:
@@ -97,7 +95,7 @@ def addNewTask(request):
             if request.POST['start_date']:
                 task.start_date = datetime.datetime.strptime(request.POST['start_date'], "%m/%d/%Y").date()
             else:
-                task.start_date = timezone.now()
+                task.start_date = timezone.now().date()
 
             task.save()
             rp = RecurringPattern(recurring_type=request.POST['recurring_type'],task=task)
@@ -129,7 +127,7 @@ def showTask(request, pk):
     if t.recurring_pattern.recurring_type == 'daily':
     
         start_date = t.start_date
-        end_date = timezone.now().date()
+        end_date = timezone.now().date() + timezone.timedelta(days=1)
 
         for dt in helpers.daterange(start_date, end_date):
             
