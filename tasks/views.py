@@ -25,7 +25,7 @@ def index(request):
     dailyTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="daily",
-        start_date__gte=timezone.now(),
+        start_date__gte=timezone.now().date(),
     ).exclude(end_date__lt=timezone.now())
 
     onceTasks = Task.objects.filter(
