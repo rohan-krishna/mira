@@ -4,3 +4,4 @@ from .models import *
 admin.site.register(Task)
 admin.site.register(TaskRecord)
 admin.site.register(RecurringPattern)
+admin.site.register(UserProfileInfo)

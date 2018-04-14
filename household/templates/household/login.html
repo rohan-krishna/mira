@@ -1,0 +1,46 @@
+{% extends "household/master.html" %}
+
+{% block 'title' %}
+Login to Mira
+{% endblock 'title' %}
+
+{% block 'content' %}
+
+<div class="ui container">
+    
+    <div class="ui segment">
+        <h1>
+            Please Login to Continue
+        </h1>
+    
+        <hr>
+    
+        <form action="{% url 'household:user_login' %}" class="ui form" method="post">
+    
+            {% csrf_token %}
+    
+            <div class="field">
+                <label for="username">Username: </label>
+                <input type="text" name="username" placeholder="Enter Username">
+            </div>
+    
+            <div class="field">
+                <label for="password">Password: </label>
+                <input type="password" name="password" placeholder="Enter Password">
+            </div>
+            
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+            <div class="field">
+                <button class="ui labeled icon blue button">
+                    <i class="icon sign in"></i>
+                    Login
+                </button>
+            </div>
+    
+        </form>
+    </div>
+
+</div>
+
+{% endblock 'content' %}

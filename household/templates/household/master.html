@@ -8,10 +8,31 @@
     <title>Djandora | {% block 'title' %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.css">
     <link rel="stylesheet" href="{% static 'household/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'household/css/app.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.css">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
 </head>
 <body class="site-wrapper">
+
+    <div class="ui top fixed inverted menu">
+        
+        <div class="item">
+            Mira
+        </div>
+
+        <a class="item" href="{% url 'tasks:index' %}">
+            <i class="icon database"></i> Tasks
+        </a>
+
+        <div class="right menu">
+            <a href="{% url 'household:user_logout' %}" class="item">
+                <i class="icon sign out"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+
     <div class="ui container fluid">
         {% block 'content' %}
         {% endblock %}

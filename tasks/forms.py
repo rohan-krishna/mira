@@ -15,3 +15,8 @@ class TaskForm(forms.ModelForm):
         model=Task
         fields = '__all__'
         exclude= ('owner','is_full_day_task','is_recurring','start_date','end_date','start_time','end_time')
+
+
+class UserProfileInfoForm(forms.ModelForm):
+    model = UserProfileInfo
+    fields = ('portfolio_site','profile_pic')

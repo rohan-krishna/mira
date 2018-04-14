@@ -1,6 +1,4 @@
-import calendar
 import datetime
-import json
 import sweetify
 from itertools import chain
 
@@ -9,6 +7,7 @@ from django.http import HttpResponse
 from .models import *
 from calendar import HTMLCalendar
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -17,18 +16,17 @@ from .serializers import *
 from django.utils import timezone
 
 from .forms import TaskForm
+from . import helpers
 
 # Create your views here.
+@login_required
 def index(request):
-    tasks = Task.objects.filter(
-        owner=request.user,
-        start_date = timezone.now())
 
     dailyTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="daily",
-        start_date__lte=timezone.now(),
-    ).exclude(end_date__lt=timezone.now())
+        start_date__lte=timezone.now().date(),
+    ).exclude(end_date__lt=timezone.now().date())
 
     onceTasks = Task.objects.filter(
         owner=request.user,
@@ -43,12 +41,7 @@ def index(request):
     combined_tasks = list(chain(dailyTasks,onceTasks))
 
     context = { 
-        'tasks': tasks, 
-        'daysInMonth' : range(calendar.monthrange(datetime.datetime.now().year, datetime.datetime.now().month)[1]), 
-        'calendar': HTMLCalendar(calendar.SUNDAY),
         'future_tasks' : future_tasks,
-        'daily_tasks' : dailyTasks,
-        'once_tasks' : onceTasks,
         'combined_tasks' : combined_tasks
         }
     return render(request, "tasks/index.html", context)
@@ -59,6 +52,7 @@ def allTasks(request):
     serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
 
+@login_required
 @transaction.atomic
 def markTaskComplete(request, pk):
     
@@ -85,6 +79,7 @@ def markTaskComplete(request, pk):
 
     return redirect('tasks:index')
 
+@login_required
 @transaction.atomic
 def addNewTask(request):
     form = TaskForm()
@@ -113,6 +108,7 @@ def addNewTask(request):
             return redirect('tasks:index')
     return redirect('tasks:index')
 
+@login_required
 @transaction.atomic
 def deleteTask(request,pk):
     t = Task.objects.get(pk=pk)
@@ -121,7 +117,30 @@ def deleteTask(request,pk):
     sweetify.info(request, 'The task has been successfully deleted.', persistent="All Righty!")
     return redirect('tasks:index')
 
+@login_required
 def showTask(request, pk):
+    
     t = request.user.owner.get(pk=pk)
-    context = { 'task' : t }
+
+    dateslist = []
+    records_count = 0
+    efficiency = 0
+
+    start_date = t.start_date
+    end_date = timezone.now().date()
+
+    for dt in helpers.daterange(start_date, end_date):
+        
+        r = t.records.filter(created_at__year=dt.year, created_at__month=dt.month, created_at__day=dt.day,is_completed=True)
+
+        if r:
+            dateslist.append({"date" : dt, "record" : r.first })
+            records_count = records_count+1
+        else:
+            dateslist.append({"date" : dt})
+
+    efficiency =  (records_count / len(dateslist) ) * 100
+
+    context = {'task': t, 'dateslist' : dateslist, 'efficiency' : efficiency }
+
     return render(request, 'tasks/show.html', context)

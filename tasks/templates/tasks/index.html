@@ -39,7 +39,9 @@ Showing Tasks
                         {{ forloop.counter }}
                     </td>
                     <td>
-                        {{ c_task.name }}
+                        <a href="{% url 'tasks:show-task' c_task.id %}">
+                            {{ c_task.name }}
+                        </a>
                     </td>
                     <td>
                         {{ c_task.start_date }}

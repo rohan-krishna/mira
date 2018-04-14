@@ -1,4 +1,17 @@
 /*
 */
 body {
-  background: #f2f2f2; }
+  background: #f2f2f2;
+  padding-top: 75px; }
+
+.hero-wrapper {
+  display: flex; }
+  .hero-wrapper .text {
+    flex: 1;
+    text-align: center; }
+    .hero-wrapper .text h1 {
+      font-size: 6em !important;
+      font-weight: 300; }
+    .hero-wrapper .text p {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.52em; }

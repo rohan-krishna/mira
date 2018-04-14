@@ -14,7 +14,70 @@ Showing {{ task.name }}
 
         <hr>
 
+        <table class="ui celled padded table">
+            <tbody>
+                <tr>
+                    <td>Description</td>
+                    <td>
+                        {{ task.description }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Recurring Pattern</td>
+                    <td>
+                        {{ task.recurring_pattern.recurring_type }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Created At</td>
+                    <td>
+                        {{ task.created_at }} - {% now "SHORT_DATETIME_FORMAT" %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
+        <table class="ui celled padded black table">
+            <thead>
+                <tr>
+                    {% for d_item in dateslist %}
+                    <th style="text-align:center">
+                        {{ d_item.date | date }} <br>
+                        {{ d_item.date | date:"D" }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                {% for d_item in dateslist %}
+                    <td style="text-align:center">
+                        {% if d_item.record %}
+                            <a href="#" class="ui icon circled green button">
+                                <i class="icon check"></i>
+                            </a>
+                        {% else %}
+                            <a href="#" class="ui icon circled red button">
+                                <i class="icon close"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="hero-wrapper ui segment">
+            <div class="text">
+                <h1>
+                    {% load humanize %}
+                    {{ efficiency|floatformat:1|intcomma }} %
+                </h1>
+                <p>
+                    The number above represents the efficiency score of the "<i>{{ task.name }}</i>" during the last 7 days including <i>Today</i>.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
