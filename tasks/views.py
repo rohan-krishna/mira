@@ -126,20 +126,40 @@ def showTask(request, pk):
     records_count = 0
     efficiency = 0
 
-    start_date = t.start_date
-    end_date = timezone.now().date()
+    if t.recurring_pattern.recurring_type == 'daily':
+    
+        start_date = t.start_date
+        end_date = timezone.now().date()
 
-    for dt in helpers.daterange(start_date, end_date):
+        for dt in helpers.daterange(start_date, end_date):
+            
+            r = t.records.filter(created_at__year=dt.year, created_at__month=dt.month, created_at__day=dt.day,is_completed=True)
+
+            if r:
+                dateslist.append({"date" : dt, "record" : r.first })
+                records_count = records_count+1
+            else:
+                dateslist.append({"date" : dt})
+
+        efficiency =  (records_count / len(dateslist) ) * 100
+    
+    else:
         
-        r = t.records.filter(created_at__year=dt.year, created_at__month=dt.month, created_at__day=dt.day,is_completed=True)
+        start_date = t.start_date
+        end_date = t.start_date
 
-        if r:
-            dateslist.append({"date" : dt, "record" : r.first })
-            records_count = records_count+1
-        else:
-            dateslist.append({"date" : dt})
+        for dt in helpers.daterange(start_date, end_date):
+            
+            r = t.records.filter(created_at__year=dt.year, created_at__month=dt.month,created_at__day=dt.day, is_completed=True)
 
-    efficiency =  (records_count / len(dateslist) ) * 100
+            if r:
+                dateslist.append({"date" : dt, "record" : r.first })
+                records_count = records_count+1
+            else:
+                dateslist.append({"date" : dt})
+
+        efficiency = (records_count / len(dateslist)) * 100
+
 
     context = {'task': t, 'dateslist' : dateslist, 'efficiency' : efficiency }
 
