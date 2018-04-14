@@ -26,6 +26,10 @@
         </a>
 
         <div class="right menu">
+            <a href="#" class="item">
+                <i class="icon calendar"></i>
+                {% now 'd / m / Y' %}
+            </a>
             <a href="{% url 'household:user_logout' %}" class="item">
                 <i class="icon sign out"></i>
                 Logout
