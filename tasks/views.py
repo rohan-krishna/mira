@@ -127,7 +127,7 @@ def showTask(request, pk):
 
     if t.recurring_pattern.recurring_type == 'daily':
     
-        start_date = timezone.locadate(t.start_date)
+        start_date = timezone.localdate(t.start_date)
         end_date = timezone.localdate(timezone.now()) + timezone.timedelta(days=1)
 
         for dt in helpers.daterange(start_date, end_date):
