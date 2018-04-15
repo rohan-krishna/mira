@@ -61,7 +61,7 @@ def markTaskComplete(request, pk):
 
         # let's search for today's records
         record = t.records.filter(
-            created_at__date=timezone.now()
+            created_at__date=timezone.now().date()
         ).first()
 
         if not record:
