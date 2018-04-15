@@ -24,6 +24,17 @@ class Task(models.Model):
     def __unicode__(self):
         return self.name
 
+    def is_record_for_today(self):
+        # The very last of the record
+        r = self.records.last()
+
+        if r and r.created_at.date() == timezone.now().date():
+            return True
+        else:
+            return False
+
+        return False
+
 class RecurringPattern(models.Model):
     task = models.OneToOneField(Task, related_name='recurring_pattern',on_delete=models.CASCADE)
     recurring_type = models.CharField(max_length=255, blank=True, null=True)
@@ -59,15 +70,6 @@ class TaskRecord(models.Model):
 
     def __str__(self):
         return self.task.name + " (" + str(self.is_completed) + ") " 
-
-    def is_for_today(self):
-
-        if self.created_at == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
-            return True
-        elif self.task.start_date == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
-            return True
-        else:
-            return True
 
 class UserProfileInfo(models.Model):
     

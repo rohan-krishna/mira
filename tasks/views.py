@@ -25,18 +25,18 @@ def index(request):
     dailyTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="daily",
-        start_date__lte=timezone.now().replace(hour=0,minute=0,second=0)
-    ).exclude(end_date__lt=timezone.now())
+        start_date__lte=timezone.now().date()
+    )
 
     onceTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="once",
-        start_date=timezone.now().replace(hour=0,minute=0,second=0)
+        start_date=timezone.now().date()
     )
     
     future_tasks = Task.objects.filter(
         owner=request.user,
-        start_date__gt = timezone.now().replace(hour=0,minute=0,second=0))
+        start_date__gt = timezone.now().date())
 
     combined_tasks = list(chain(dailyTasks,onceTasks))
 
@@ -127,7 +127,7 @@ def showTask(request, pk):
     if t.recurring_pattern.recurring_type == 'daily':
     
         start_date = t.start_date
-        end_date = timezone.now().date() + timezone.timedelta(days=1)
+        end_date = timezone.now().date()
 
         for dt in helpers.daterange(start_date, end_date):
             

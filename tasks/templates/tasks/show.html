@@ -29,9 +29,25 @@ Showing {{ task.name }}
                     </td>
                 </tr>
                 <tr>
+                    <td>Start Date: </td>
+                    <td>
+                        {{ task.start_date| date:"d/m/Y" }}
+                    </td>
+                </tr>
+                <tr>
                     <td>Created At</td>
                     <td>
-                        {{ task.created_at }}
+                        {{ task.created_at | date:"d/m/Y" }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Status ( For Today ): </td>
+                    <td>
+                        {% if task.is_record_for_today %}
+                            <i class="icon check"></i>
+                        {% else %}
+                            <i class="icon close"></i>
+                        {% endif %}
                     </td>
                 </tr>
             </tbody>
