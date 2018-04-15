@@ -1,11 +1,10 @@
-import datetime
 import sweetify
+import datetime
 from itertools import chain
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
-from calendar import HTMLCalendar
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 
@@ -18,6 +17,7 @@ from django.utils import timezone
 from .forms import TaskForm
 from . import helpers
 
+
 # Create your views here.
 @login_required
 def index(request):
@@ -25,18 +25,18 @@ def index(request):
     dailyTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="daily",
-        start_date__lte=timezone.now().date()
+        start_date__lte=timezone.localdate(timezone.now())
     )
 
     onceTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="once",
-        start_date=timezone.now().date()
+        start_date=timezone.localdate(timezone.now())
     )
     
     future_tasks = Task.objects.filter(
         owner=request.user,
-        start_date__gt = timezone.now().date())
+        start_date__gt =timezone.localdate(timezone.now()))
 
     combined_tasks = list(chain(dailyTasks,onceTasks))
 
@@ -61,14 +61,15 @@ def markTaskComplete(request, pk):
 
         # let's search for today's records
         record = t.records.filter(
-            created_at__date=timezone.now().date()
+            created_at__date=timezone.localdate(timezone.now())
         ).first()
 
         if not record:
-            r = TaskRecord(task=t,is_completed=True,data=t)
+            r = TaskRecord(task=t,is_completed=True,data=timezone.localdate(timezone.now()))
             r.save()
         else:
             record.is_completed = True if not record.is_completed else False
+            record.data=timezone.localdate(timezone.now())
             record.save()
         
         sweetify.success(request, 'Heads Up!.',text='The task\'s status has been toggled!', persistent="Noice!")
@@ -95,7 +96,7 @@ def addNewTask(request):
             if request.POST['start_date']:
                 task.start_date = datetime.datetime.strptime(request.POST['start_date'], "%m/%d/%Y").date()
             else:
-                task.start_date = timezone.now().date()
+                task.start_date =timezone.localdate(timezone.now())
 
             task.save()
             rp = RecurringPattern(recurring_type=request.POST['recurring_type'],task=task)
@@ -126,8 +127,8 @@ def showTask(request, pk):
 
     if t.recurring_pattern.recurring_type == 'daily':
     
-        start_date = t.start_date
-        end_date = timezone.now().date()
+        start_date = timezone.locadate(t.start_date)
+        end_date = timezone.localdate(timezone.now()) + timezone.timedelta(days=1)
 
         for dt in helpers.daterange(start_date, end_date):
             
@@ -143,8 +144,8 @@ def showTask(request, pk):
     
     else:
         
-        start_date = t.start_date
-        end_date = t.start_date
+        start_date = timezone.localdate(t.start_date)
+        end_date = timezone.localdate(t.start_date)
 
         for dt in helpers.daterange(start_date, end_date):
             

@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -28,9 +26,9 @@ class Task(models.Model):
         # The very last of the record
         r = self.records.last()
 
-        if r and r.created_at.date() == timezone.now().date() and r.is_completed:
+        if r and timezone.localdate(r.created_at) == timezone.localdate(timezone.now()) and r.is_completed:
             return True
-        elif r and r.updated_at.date() == timezone.now().date() and r.is_completed:
+        elif r and timezone.localdate(r.updated_at) == timezone.localdate(timezone.now()) and r.is_completed:
             return True
         else:
             return False
