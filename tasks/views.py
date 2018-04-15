@@ -31,7 +31,7 @@ def index(request):
     onceTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="once",
-        start_date=timezone.now()
+        start_date=timezone.now().replace(hour=0,minute=0,second=0)
     )
     
     future_tasks = Task.objects.filter(
