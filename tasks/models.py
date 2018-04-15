@@ -64,9 +64,11 @@ class TaskRecord(models.Model):
 
         if self.created_at == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
             return True
+        elif self.task.start_date == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
+            return True
         else:
-            return False
-
+            return True
+            
 class UserProfileInfo(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
