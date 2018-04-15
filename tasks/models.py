@@ -28,7 +28,9 @@ class Task(models.Model):
         # The very last of the record
         r = self.records.last()
 
-        if r and r.created_at.date() == timezone.now().date():
+        if r and r.created_at.date() == timezone.now().date() and r.is_completed:
+            return True
+        elif r and r.updated_at.date() == timezone.now().date() and r.is_completed:
             return True
         else:
             return False
