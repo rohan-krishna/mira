@@ -25,7 +25,7 @@ def index(request):
     dailyTasks = Task.objects.filter(
         owner=request.user,
         recurring_pattern__recurring_type="daily",
-        start_date__gte=timezone.now().date(),
+        start_date__lte=timezone.now().replace(hour=0,minute=0,second=0)
     ).exclude(end_date__lt=timezone.now())
 
     onceTasks = Task.objects.filter(
@@ -36,7 +36,7 @@ def index(request):
     
     future_tasks = Task.objects.filter(
         owner=request.user,
-        start_date__gt = timezone.now())
+        start_date__gt = timezone.now().replace(hour=0,minute=0,second=0))
 
     combined_tasks = list(chain(dailyTasks,onceTasks))
 
