@@ -64,7 +64,7 @@ class TaskRecord(models.Model):
 
         if self.created_at == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
             return True
-        elif self.task.start_date.replace(hour=0,minute=0,second=0) <= timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
+        elif self.task.start_date == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
             return True
         else:
             return True
