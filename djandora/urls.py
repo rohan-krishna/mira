@@ -18,6 +18,7 @@ from django.urls import path, include
 from tasks import views as taskviews
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),  # grappelli URLS
     path('', taskviews.index, name='home'),
     path('admin/', admin.site.urls),
     path('tasks/', include('tasks.urls')),

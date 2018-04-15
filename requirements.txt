@@ -5,6 +5,7 @@ Django==2.0
 django-bower==5.2.0
 django-debug-toolbar==1.9.1
 django-filter==1.1.0
+django-grappelli==2.11.1
 django-scheduler==0.8.7
 djangorestframework==3.8.1
 Faker==0.8.12
@@ -15,6 +16,7 @@ Markdown==2.6.11
 mccabe==0.6.1
 numpy==1.14.2
 pandas==0.22.0
+Pillow==5.1.0
 pycodestyle==2.3.1
 pylint==1.8.2
 python-dateutil==2.7.2
