@@ -62,9 +62,7 @@ class TaskRecord(models.Model):
 
     def is_for_today(self):
 
-        if self.created_at.date() == timezone.now().date() and self.is_completed:
-            return True
-        elif self.start_date == timezone.now().date() and self.is_completed:
+        if self.created_at == timezone.now().replace(hour=0,minute=0,second=0) and self.is_completed:
             return True
         else:
             return False
