@@ -1,0 +1,40 @@
+/*
+
+Landing Page Design for Bluehexagon LLC.
+
+Author : Rohan Krishna
+
+*/
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.site-wrapper {
+    display: flex;
+    flex: 1;
+    height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #333;
+}
+
+.hero-wrapper {
+    height: 50%;
+    flex: 1;
+    background: #fff;
+}
+
+.hero-content {
+    display: flex;
+    height: 100%;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.hero-content h1 {
+    font-size: 2rem;
+}

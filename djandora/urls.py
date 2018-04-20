@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from tasks import views as taskviews
+from landingpage import views as landingviews
 
 urlpatterns = [
-    path('grappelli/', include('grappelli.urls')),  # grappelli URLS
-    path('', taskviews.index, name='home'),
+    # path('grappelli/', include('grappelli.urls')),  # grappelli URLS
+    path('', landingviews.index, name='home'),
     path('admin/', admin.site.urls),
     path('tasks/', include('tasks.urls')),
     path('household/', include('household.urls')),
+    path('account/', include('account.urls')),
 ]
