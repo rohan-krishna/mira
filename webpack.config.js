@@ -9,6 +9,7 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 module.exports = {
     entry: {
         build: [APP_DIR + '/js/app.js', APP_DIR + '/sass/app.scss'],
+        landing: [APP_DIR + '/sass/landing.scss'],
     },
     output:  {
        path: BUILD_DIR, 
@@ -27,7 +28,11 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin({
-            filename: '../css/app.css',
+            filename: '../css/[name].css',
+            allChunks: true
+        }),
+        new ExtractTextPlugin({
+            filename: '../css/[name].css',
             allChunks: true
         }),
         new WebpackNotifierPlugin()
