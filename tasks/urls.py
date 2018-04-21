@@ -10,4 +10,5 @@ urlpatterns=[
     path('add-new-task',views.addNewTask, name='add'),
     path('delete-task/<int:pk>', views.deleteTask, name="delete-task"),
     path('show-task/<int:pk>', views.showTask, name="show-task"),
+    path('mark-task-show/<int:pk>', views.markTaskAtShow, name="mark-task-show"),
 ]

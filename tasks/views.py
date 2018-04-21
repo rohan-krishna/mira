@@ -17,6 +17,8 @@ from django.utils import timezone
 from .forms import TaskForm
 from . import helpers
 
+from django.utils.dateparse import parse_date
+
 
 # Create your views here.
 @login_required
@@ -61,15 +63,15 @@ def markTaskComplete(request, pk):
 
         # let's search for today's records
         record = t.records.filter(
-            created_at__date=timezone.localdate(timezone.now())
+            record_date=timezone.localdate(timezone.now())
         ).first()
 
         if not record:
-            r = TaskRecord(task=t,is_completed=True,data=timezone.localdate(timezone.now()))
+            r = TaskRecord(task=t,is_completed=True, record_date=timezone.localdate( timezone.now() ) )
             r.save()
         else:
             record.is_completed = True if not record.is_completed else False
-            record.data=timezone.localdate(timezone.now())
+            record.record_date=timezone.localdate(timezone.now())
             record.save()
         
         sweetify.success(request, 'Heads Up!.',text='The task\'s status has been toggled!', persistent="Noice!")
@@ -132,13 +134,13 @@ def showTask(request, pk):
 
         for dt in helpers.daterange(start_date, end_date):
             
-            r = t.records.filter(created_at__year=dt.year, created_at__month=dt.month, created_at__day=dt.day,is_completed=True)
+            r = t.records.filter(record_date=dt, is_completed=True)
 
             if r:
-                dateslist.append({"date" : dt, "record" : r.first })
+                dateslist.append({"date" : dt, "record" : r.first, "task" : t })
                 records_count = records_count+1
             else:
-                dateslist.append({"date" : dt})
+                dateslist.append({"date" : dt, "task" : t })
 
         efficiency =  (records_count / len(dateslist) ) * 100
     
@@ -149,13 +151,13 @@ def showTask(request, pk):
 
         for dt in helpers.daterange(start_date, end_date):
             
-            r = t.records.filter(created_at__year=dt.year, created_at__month=dt.month,created_at__day=dt.day, is_completed=True)
+            r = t.records.filter(record_date=dt, is_completed=True)
 
             if r:
-                dateslist.append({"date" : dt, "record" : r.first })
+                dateslist.append({"date" : dt, "record" : r.first, "task": t })
                 records_count = records_count+1
             else:
-                dateslist.append({"date" : dt})
+                dateslist.append({"date" : dt, "task" : t })
 
         efficiency = (records_count / len(dateslist)) * 100
 
@@ -163,3 +165,38 @@ def showTask(request, pk):
     context = {'task': t, 'dateslist' : dateslist, 'efficiency' : efficiency }
 
     return render(request, 'tasks/show.html', context)
+
+@login_required
+@transaction.atomic
+def markTaskAtShow(request, pk):
+    
+    if request.method == 'POST':
+        # this is some messed up naming convention for reverse look_up on relationships
+        # Can't seem to fix it
+        # FYI -> this is accessing user's own tasks
+        t = request.user.owner.get(pk=pk)
+
+        # let's search for today's records
+        record = t.records.filter(
+            record_date=request.POST.get('task_date')
+        ).first()
+
+        if not record:
+            r = TaskRecord(task=t, is_completed=True,
+                           data=request.POST.get('task_date'), record_date=request.POST.get('task_date'))
+
+            r.save()
+        else:
+            record.is_completed = True if not record.is_completed else False
+            record.record_date = timezone.localdate(timezone.now())
+            record.save()
+
+        sweetify.success(request, 'Heads Up!.',
+                         text='The task\'s status has been toggled!', persistent="Noice!")
+
+        return redirect('tasks:show-task',pk=t.id)
+    
+    sweetify.error(request, "Oops", text='Method not allowed.', persistent='Ok!')
+
+    return redirect('tasks:index')
+

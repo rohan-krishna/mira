@@ -68,15 +68,21 @@ Showing {{ task.name }}
                 <tr>
                 {% for d_item in dateslist %}
                     <td style="text-align:center">
-                        {% if d_item.record %}
-                            <a href="#" class="ui icon circled green button">
-                                <i class="icon check"></i>
-                            </a>
-                        {% else %}
-                            <a href="#" class="ui icon circled red button">
-                                <i class="icon close"></i>
-                            </a>
-                        {% endif %}
+                        <form action="{% url 'tasks:mark-task-show' d_item.task.id %}" method="post">
+                            {% csrf_token %}
+
+                            <input type="hidden" value="{{ d_item.date | date:'Y-m-d' }}" name="task_date">
+
+                            {% if d_item.record %}
+                                <button class="ui icon circular green button" title="Toggle Task Status">
+                                    <i class="icon check"></i>
+                                </button>
+                            {% else %}
+                                <button class="ui icon circular red button" title="Toggle Task Status">
+                                    <i class="icon close"></i>
+                                </button>
+                            {% endif %}
+                        </form>
                     </td>
                     {% endfor %}
                 </tr>

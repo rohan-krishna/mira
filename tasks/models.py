@@ -24,11 +24,9 @@ class Task(models.Model):
 
     def is_record_for_today(self):
         # The very last of the record
-        r = self.records.last()
+        r = self.records.filter(record_date=timezone.localdate(timezone.now())).first()
 
-        if r and timezone.localdate(r.created_at) == timezone.localdate(timezone.now()) and r.is_completed:
-            return True
-        elif r and timezone.localdate(r.updated_at) == timezone.localdate(timezone.now()) and r.is_completed:
+        if r and r.is_completed:
             return True
         else:
             return False
@@ -64,6 +62,7 @@ class TaskException(models.Model):
 class TaskRecord(models.Model):
     task = models.ForeignKey(Task, related_name='records', on_delete=models.CASCADE)
     data = models.TextField(null=True)
+    record_date = models.DateField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_completed = models.BooleanField(default=False)
