@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'household/css/build.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.css">
-    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">    
 </head>
 <body class="site-wrapper">
     <div class="ui top fixed inverted menu">
@@ -50,7 +50,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.18.0/sweetalert2.js"></script>
-
+    <script src="{% static 'household/js/tasks.js' %}"></script>
+    
     {% load sweetify %} {% sweetify %}
 
     {% block 'scripts' %}

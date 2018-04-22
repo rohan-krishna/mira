@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'sweetify', 
     # 'account',
     'landingpage',
+    'tasks_react',
     'django.contrib.humanize',
 ]
 
