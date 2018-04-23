@@ -2,6 +2,6 @@
 
     "presets": [
         "env",
-        "react"
-    ]
+        "react",
+    ],
 }

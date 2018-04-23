@@ -6,7 +6,7 @@ Showing {{ task.name }}
 
 {% block 'content' %}
 
-<div class="ui container">
+<div class="ui container fluid" style="padding: 0 1.52rem; ">
     <div class="ui segment">
         <h1 class="ui title">
             Showing : {{ task.name }}
@@ -14,7 +14,7 @@ Showing {{ task.name }}
 
         <hr>
 
-        <table class="ui celled padded table">
+        <table class="ui celled padded table" id="dataTable">
             <tbody>
                 <tr>
                     <td>Description</td>
