@@ -53,21 +53,17 @@ Showing {{ task.name }}
             </tbody>
         </table>
 
-        <table class="ui celled padded black table">
-            <thead>
-                <tr>
-                    {% for d_item in dateslist %}
-                    <th style="text-align:center">
-                        {{ d_item.date | date }} <br>
-                        {{ d_item.date | date:"D" }}
-                    </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                {% for d_item in dateslist %}
-                    <td style="text-align:center">
+        <div class="ui cards">
+            {% for d_item in dateslist %}
+            <div class="card">
+                <div class="content center aligned text">
+                    <div class="header">
+                        {{ d_item.date | date }},{{ d_item.date | date:"D" }}
+                    </div>
+
+                    <hr>
+
+                    <div class="description">
                         <form action="{% url 'tasks:mark-task-show' d_item.task.id %}" method="post">
                             {% csrf_token %}
 
@@ -83,11 +79,11 @@ Showing {{ task.name }}
                                 </button>
                             {% endif %}
                         </form>
-                    </td>
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
         <div class="hero-wrapper ui segment">
             <div class="text">
@@ -96,7 +92,7 @@ Showing {{ task.name }}
                     {{ efficiency|floatformat:1|intcomma }} %
                 </h1>
                 <p>
-                    The number above represents the efficiency score of the "<i>{{ task.name }}</i>" during the last 7 days including <i>Today</i>.
+                    The number above represents the efficiency score of the "<i>{{ task.name }}</i>" from it's Start Date till <i>Today</i>.
                 </p>
             </div>
         </div>
